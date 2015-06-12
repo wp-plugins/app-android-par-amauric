@@ -1,0 +1,29 @@
+=== Comment by Tweet ===
+Contributors: Amauri CHAMPEAUX
+Tags: android app, android, api
+Requires at least: 2.8
+Tested up to: 4.1
+Stable tag: 0.1
+
+Création de l'interface entre l'application Android et le blog Wordpress.
+
+== Description ==
+
+Création de l'interface de gestion entre l'application Android et le blog Wordpress.
+
+Commande de l'application en ligne : https://android.ferank.fr/
+
+== Installation ==
+
+1. Uploadez le dossier `app-android-amauri` dans `/wp-content/plugins/`
+2. Activez le plugin depuis le menu `Extensions` de Wordpress
+3. Entrez les informations relatives à l'activation des notifications push et de l'app indexing sur la page des réglages
+
+== Screenshots ==
+
+1. App Android
+
+== Changelog ==
+
+= 0.1 =
+* Version initiale
