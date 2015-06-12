@@ -1,4 +1,4 @@
-=== Comment by Tweet ===
+=== App Android pour Wordpress ===
 Contributors: Amauri CHAMPEAUX
 Tags: android app, android, api
 Requires at least: 2.8
