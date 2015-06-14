@@ -23,6 +23,9 @@ if(!class_exists('PushAndroidAppAmauri'))
 				
 				require(sprintf("%s/Utils.php", dirname(__FILE__)));
 				$image = $UtilsAndroidAppAmauri->getImage($id_post);
+				if ($image == '') {
+					$image = ' ';
+				}
 				
 				$url = 'https://android.googleapis.com/gcm/send';
 				$message = array("url" => get_permalink( $id_post ), "image" => $image, "id" => $id_post, "title" => $titre, "info" => $intro, "msg" => $msg);
