@@ -40,6 +40,7 @@ if(!class_exists('APIAndroidAppAmauri'))
 			
 			$count_posts = wp_count_posts();
 			$json .= '{"name":"_NB_","id":"", "nb":"'.$count_posts->publish.'"},';
+			$divider = true;
 			
 			$categories = get_terms('category', array('hide_empty' => true));
 			$data = array();
@@ -50,10 +51,12 @@ if(!class_exists('APIAndroidAppAmauri'))
 			foreach($data as $d) {
 				$nb = '';
 				if($d->count > 0) {$nb = $d->count;}
-				$json .= '{"name":"_divider_","id":"0", "nb":"0"},';
+				if ($divider) {$json .= '{"name":"_divider_","id":"0", "nb":"0"},';}
 				$json .= '{"name":"'.trim($d->name).'","id":"'.$d->term_id.'", "nb":"'.($nb).'"},';
 				
+				$divider = false;
 				foreach($d->children as $dd) {
+					$divider = true;
 					$nb = '';
 					if($dd->count > 0) {$nb = $dd->count;}
 					$json .= '{"name":" '.trim($dd->name).'","id":"'.$dd->term_id.'", "nb":"'.($nb).'"},';
