@@ -37,9 +37,9 @@ if(!class_exists('APIAndroidAppAmauri'))
 		}
 		
 		public function category($offset = 0) {
-			
+
 			$count_posts = wp_count_posts();
-			$json .= '{"name":"_NB_","id":"", "nb":"'.$count_posts->publish.'"},';
+			$json = '{"name":"_NB_","id":"", "nb":"'.$count_posts->publish.'"},';
 			$divider = true;
 			
 			$categories = get_terms('category', array('hide_empty' => true));
@@ -75,6 +75,8 @@ if(!class_exists('APIAndroidAppAmauri'))
 		
 		public function recent($offset = 0, $isCat = 0, $isSearch = false) {
 			
+			$json = '';
+			$search = '';
 			if($isSearch) {
 				$search = $isSearch;
 			}

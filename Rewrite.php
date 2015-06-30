@@ -11,34 +11,45 @@ if(!class_exists('RewriteAndroidAppAmauri'))
 		
 			if ( preg_match( '#^/android_json/(.*)$#', $_SERVER['REQUEST_URI'], $match ) ) {
 				$request = explode( '/', $match[1] );
-				$output = false;
+				$return = false;
+				
+				if (!isset($request[1])) {$request[1] = '';}
+				if (!isset($request[2])) {$request[2] = '';}
+				
 				switch ( $request[0] ) {
 					case 'category':
+						$return = true;
 						$output = $APIAndroidAppAmauri->category($request[1]);
 						break;
 					case 'bycat':
+						$return = true;
 						if ($request[1] == '') {$request[1] = 0;}
 						$output = $APIAndroidAppAmauri->recent($request[2], $request[1]);
 						break;
 					case 'recent':
+						$return = true;
 						if ($request[2] == '') {$request[2] = 0;}
 						$output = $APIAndroidAppAmauri->recent($request[1], $request[2]);
 						break;
 					case 'search':
+						$return = true;
 						if ($request[2] == '') {$request[2] = 0;}
 						$output = $APIAndroidAppAmauri->recent($request[2], 0, $request[1]);
 						break;
 					case 'read':
+						$return = true;
 						$output = $APIAndroidAppAmauri->read($request[1]);
 						break;
 					case 'register':
+						$return = true;
 						$output = $PushAndroidAppAmauri->register();
 						break;
 					case 'unregister':
+						$return = true;
 						$output = $PushAndroidAppAmauri->unregister();
 						break;
 				}
-				if ( $output ) {
+				if ( $return ) {
 					header('HTTP/1.1 200 OK');
 					header('Content-Type: application/json; charset=utf-8');
 					echo $output;

@@ -34,7 +34,14 @@
 				$exclude = get_option('androidappamauri_exclude');
 				$pages = get_pages(); 
 				foreach ( $pages as $page ) {
-					echo '<label><input type="checkbox" name="androidappamauri_exclude[]" value="' . $page->ID . '" ';if (in_array($page->ID, $exclude)) {echo 'checked';}echo ' /> ' . trim($page->post_title) . '</label><br/>';
+					echo '<label><input type="checkbox" name="androidappamauri_exclude[]" value="' . $page->ID . '" ';
+					if (is_array($exclude))
+					{
+						if (in_array($page->ID, $exclude)) {
+							echo 'checked';
+						}
+					}
+					echo ' /> ' . trim($page->post_title) . '</label><br/>';
 				}
 				?>
 			</td>
