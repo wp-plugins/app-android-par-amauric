@@ -18,6 +18,7 @@ if(!class_exists('AndroidAppAmauri'))
 			require_once(sprintf("%s/SEO.php", dirname(__FILE__)));
 			require_once(sprintf("%s/Rewrite.php", dirname(__FILE__)));
 			require_once(sprintf("%s/Dashboard.php", dirname(__FILE__)));
+			require_once(sprintf("%s/Widget.php", dirname(__FILE__)));
 			
 			add_action('template_redirect', array($RewriteAndroidAppAmauri, 'json' ), 0);
 			add_action('publish_post', array($PushAndroidAppAmauri, 'sendToAndroid' ), 10, 2);
