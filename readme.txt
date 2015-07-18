@@ -3,7 +3,7 @@ Contributors: Amauri CHAMPEAUX
 Tags: android app, android, api
 Requires at least: 2.8
 Tested up to: 4.1
-Stable tag: 0.1
+Stable tag: trunk
 
 Création de l'interface entre l'application Android et le blog Wordpress.
 
