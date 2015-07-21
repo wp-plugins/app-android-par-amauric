@@ -3,7 +3,7 @@
 Plugin Name: App Android (par Amauri)
 Plugin URI: https://android.ferank.fr/
 Description: Création de l'interface entre le blog et l'application.
-Version: 0.1
+Version: 0.2
 Author: Amauri CHAMPEAUX
 Author URI: http://amauri.champeaux.fr/a-propos
 */

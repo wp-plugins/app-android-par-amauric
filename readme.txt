@@ -25,5 +25,10 @@ Commande de l'application en ligne : https://android.ferank.fr/
 
 == Changelog ==
 
+= 0.2 =
+* Convert Youtube frame to linked img
+* Link for frame
+* Fix some JSON errors
+
 = 0.1 =
 * Version initiale

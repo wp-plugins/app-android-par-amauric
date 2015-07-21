@@ -28,11 +28,21 @@ if(!class_exists('APIAndroidAppAmauri'))
 			$content = $content_post->post_content;
 			$content = apply_filters('the_content', $content);
 			$content = str_replace(']]>', ']]&gt;', $content);
-			$content = preg_replace('#"#', '\"', html_entity_decode(str_replace(array("\r", "\n"),"", $content)));
+			$content = html_entity_decode(str_replace(array("\r", "\n"),"", $content));
+			
+			// youtube
+			$content = preg_replace('/<iframe.*src=[\'|"](https?:)?(\/\/)?(www\.)?(youtu\.be\/|youtube(-nocookie)?\.[a-z]{2,4}(?:\/embed\/|\/v\/|\/watch?.*?v=))([\w\-]{10,12})[\'|"][^>]+><\/iframe>/', '<a href="https://www.youtube.com/watch?v=$6"><img src="http://img.youtube.com/vi/$6/maxresdefault.jpg" /><br/><b>Voir la vidéo</b><br/></a>', $content);
+			
+			$content = preg_replace('#"#', '\"', $content);
+			$content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+			$content = preg_replace('#<style(.*?)>(.*?)</style>#is', '', $content);
+			$content = preg_replace('#	#is', '', $content);
+			
+			$titre = preg_replace('#"#', '\"', html_entity_decode(get_the_title($id)));
 			
 			$data = get_terms('category', array('hide_empty' => 1));
 			$image = $UtilsAndroidAppAmauri->getImage($id);
-			$json = '{"cat":"'.$cat.'","info":"'.$info.'","permalink":"'. get_permalink( $id ).'","titre":"'.html_entity_decode(get_the_title($id)).'","texte":"'.$content.'","image":"'.$image.'","id":"'.$id.'"}';
+			$json = '{"cat":"'.$cat.'","info":"'.$info.'","permalink":"'. get_permalink( $id ).'","titre":"'.$titre.'","texte":"'.$content.'","image":"'.$image.'","id":"'.$id.'"}';
 			return '{"data":['.trim($json, ',').']}';
 		}
 		
@@ -101,7 +111,9 @@ if(!class_exists('APIAndroidAppAmauri'))
 				$excerpt = $UtilsAndroidAppAmauri->humanTime(current_time('timestamp') - strtotime($content_post->post_date));
 				$image = $UtilsAndroidAppAmauri->getImage($d['ID']);
 				
-				$json .= '{"cat":"'.$cat.'","titre":"'.$d['post_title'].'","texte":"'.$excerpt.'","image":"'.$image.'","id":"'.$d['ID'].'"},';
+				$titre = preg_replace('#"#', '\"', $d['post_title']);
+				
+				$json .= '{"cat":"'.$cat.'","titre":"'.$titre.'","texte":"'.$excerpt.'","image":"'.$image.'","id":"'.$d['ID'].'"},';
 			}
 			return '{"data":['.trim($json, ',').']}';
 		}
