@@ -6,7 +6,16 @@ if(!class_exists('PushAndroidAppAmauri'))
 
 		public function sendToAndroid($id_post, $post)
 		{
+			// exit if already pushed
+			if (get_option('androidappamauri_push_' . $id_post, '0') == '1') {
+				return;
+			}
+			
 			global $wpdb;
+			
+			// do not push more than 1 time
+			add_option('androidappamauri_push_' . $id_post, '1');
+
 			$row = $wpdb->get_results("SELECT registration_id FROM {$wpdb->prefix}AndroidAppAmauri_ids");
 			$id = array();
 			$send = 0;
