@@ -29,7 +29,7 @@ if(!class_exists('PushAndroidAppAmauri'))
 				
 				$url = 'https://android.googleapis.com/gcm/send';
 				$message = array("url" => get_permalink( $id_post ), "image" => $image, "id" => $id_post, "title" => $titre, "info" => $intro, "msg" => $msg);
-				$fields = array('registration_ids' => $id, 'data' => $message);
+				$fields = array('time_to_live' => 86400, 'collapse_key' => 'WP ' . $_SERVER['SERVER_NAME'], 'registration_ids' => $id, 'data' => $message);
 				$headers = array('Authorization: key=' . get_option('androidappamauri_apipush'), 'Content-Type: application/json');
 				$ch = curl_init();
 				curl_setopt($ch, CURLOPT_URL, $url);
