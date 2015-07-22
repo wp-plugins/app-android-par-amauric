@@ -31,7 +31,7 @@ if(!class_exists('APIAndroidAppAmauri'))
 			$content = html_entity_decode(str_replace(array("\r", "\n"),"", $content));
 			
 			// youtube
-			$content = preg_replace('/<iframe.*src=[\'|"](https?:)?(\/\/)?(www\.)?(youtu\.be\/|youtube(-nocookie)?\.[a-z]{2,4}(?:\/embed\/|\/v\/|\/watch?.*?v=))([\w\-]{10,12})[\'|"][^>]+><\/iframe>/', '<a href="https://www.youtube.com/watch?v=$6"><img src="http://img.youtube.com/vi/$6/maxresdefault.jpg" /><br/><b>Voir la vidéo</b><br/></a>', $content);
+			$content = preg_replace('/<iframe.*?(?!src).*?src=[\'|"](https?:)?(\/\/)?(www\.)?(youtu\.be\/|youtube(-nocookie)?\.[a-z]{2,4}(?:\/embed\/|\/v\/|\/watch\?.*?v=))([\w\-]{10,12})([\?|&]?.*?)?[\'|"][^>]+><\/iframe>/g', '<a href="https://www.youtube.com/watch?v=$6"><img src="http://img.youtube.com/vi/$6/maxresdefault.jpg" /><br/><b>Voir la vidéo</b><br/></a>', $content);
 			
 			$content = preg_replace('#"#', '\"', $content);
 			$content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
