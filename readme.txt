@@ -25,6 +25,9 @@ Commande de l'application en ligne : https://android.ferank.fr/
 
 == Changelog ==
 
+= 0.2.2 =
+* Fix youtube image
+
 = 0.2.1 =
 * Do not send push notification if already sent
 
