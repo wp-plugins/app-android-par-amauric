@@ -23,7 +23,7 @@ if(!class_exists('APIAndroidAppAmauri'))
 			}
 			
 			require(sprintf("%s/Utils.php", dirname(__FILE__)));
-			$info = $UtilsAndroidAppAmauri->humanTime(current_time('timestamp') - strtotime($content_post->post_date));
+			$info = 'Il y a ' . $UtilsAndroidAppAmauri->humanTime(current_time('timestamp') - strtotime($content_post->post_date)) . ' par ' . get_the_author_meta('display_name', $content_post->post_author);
 			
 			$content = $content_post->post_content;
 			$content = apply_filters('the_content', $content);
