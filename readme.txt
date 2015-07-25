@@ -25,6 +25,10 @@ Commande de l'application en ligne : https://android.ferank.fr/
 
 == Changelog ==
 
+= 0.3 =
+* Add similars articles
+* Youtube play button instead of linked
+
 = 0.2.2.2 =
 * Add author name
 

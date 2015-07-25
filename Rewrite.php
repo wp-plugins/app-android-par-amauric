@@ -40,6 +40,10 @@ if(!class_exists('RewriteAndroidAppAmauri'))
 						$return = true;
 						$output = $APIAndroidAppAmauri->read($request[1]);
 						break;
+					case 'youtube':
+						$return = true;
+						$output = $APIAndroidAppAmauri->youtube($request[1]);
+						break;
 					case 'register':
 						$return = true;
 						$output = $PushAndroidAppAmauri->register();
