@@ -3,6 +3,22 @@
 if(!class_exists('UtilsAndroidAppAmauri'))
 {
     class UtilsAndroidAppAmauri {
+		
+		public function get_gravatar_url( $email ) {
+			$hash = md5( strtolower( trim ( $email ) ) );
+			return 'http://gravatar.com/avatar/' . $hash;
+		}
+
+		public function sanitize($content) {
+			$content = str_replace(']]>', ']]&gt;', $content);
+			$content = html_entity_decode(str_replace(array("\r", "\n"),"", $content));
+			$content = preg_replace('#"#', '\"', $content);
+			$content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+			$content = preg_replace('#<style(.*?)>(.*?)</style>#is', '', $content);
+			$content = preg_replace('#	#is', '', $content);
+			
+			return $content;
+		}
 
 		public function getImage($id) {
 			$image = wp_get_attachment_image_src( get_post_thumbnail_id( $id ), 'single-post-thumbnail' );

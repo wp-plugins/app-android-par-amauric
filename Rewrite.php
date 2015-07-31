@@ -36,6 +36,11 @@ if(!class_exists('RewriteAndroidAppAmauri'))
 						if ($request[2] == '') {$request[2] = 0;}
 						$output = $APIAndroidAppAmauri->recent($request[2], 0, $request[1]);
 						break;
+					case 'comment':
+						$return = true;
+						if ($request[2] == '') {$request[2] = 0;}
+						$output = $APIAndroidAppAmauri->comment($request[1], $request[2]);
+						break;
 					case 'read':
 						$return = true;
 						$output = $APIAndroidAppAmauri->read($request[1]);

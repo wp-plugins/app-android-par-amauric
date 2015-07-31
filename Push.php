@@ -3,19 +3,14 @@
 if(!class_exists('PushAndroidAppAmauri'))
 {
     class PushAndroidAppAmauri {
+		
+		public function __construct() {
+			add_action( 'sendnotificationspush', array($this, 'cron') );
+		}
 
-		public function sendToAndroid($id_post, $post)
-		{
-			// exit if already pushed
-			if (get_option('androidappamauri_push_' . $id_post, '0') == '1') {
-				return;
-			}
-			
+		public function send($id_post, $titre, $content) {
 			global $wpdb;
 			
-			// do not push more than 1 time
-			add_option('androidappamauri_push_' . $id_post, '1');
-
 			$row = $wpdb->get_results("SELECT registration_id FROM {$wpdb->prefix}AndroidAppAmauri_ids");
 			$id = array();
 			$send = 0;
@@ -25,8 +20,6 @@ if(!class_exists('PushAndroidAppAmauri'))
 			}
 			if($send > 0 && get_option('androidappamauri_apipush', '') != '')
 			{
-				$titre = $post->post_title;				
-				$content = wp_strip_all_tags($post->post_content);
 				$intro = substr($content, 0, 100);
 				$msg = substr($content, 0, 255);
 				
@@ -38,7 +31,7 @@ if(!class_exists('PushAndroidAppAmauri'))
 				
 				$url = 'https://android.googleapis.com/gcm/send';
 				$message = array("url" => get_permalink( $id_post ), "image" => $image, "id" => $id_post, "title" => $titre, "info" => $intro, "msg" => $msg);
-				$fields = array('time_to_live' => 86400, 'collapse_key' => 'WP ' . $_SERVER['SERVER_NAME'], 'registration_ids' => $id, 'data' => $message);
+				$fields = array('time_to_live' => 86400, 'collapse_key' => 'WP ' . $id_post, 'registration_ids' => $id, 'data' => $message);
 				$headers = array('Authorization: key=' . get_option('androidappamauri_apipush'), 'Content-Type: application/json');
 				$ch = curl_init();
 				curl_setopt($ch, CURLOPT_URL, $url);
@@ -49,6 +42,38 @@ if(!class_exists('PushAndroidAppAmauri'))
 				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
 				$result = curl_exec($ch);
 				curl_close($ch);
+			}
+		}
+		
+		public function sendToAndroid($id_post, $post)
+		{
+			// exit if already pushed
+			if (get_option('androidappamauri_push_' . $id_post, '0') == '1' OR get_option('androidappamauri_autopush', '1') == '0') {
+				return;
+			}
+			
+			global $wpdb;
+			
+			// do not push more than 1 time
+			add_option('androidappamauri_push_' . $id_post, '1');
+
+			$titre = $post->post_title;				
+			$content = mb_substr(wp_strip_all_tags($post->post_content), 0, 255);
+			
+			// ajout a l'historique
+			$empreinte = md5($id_post . $titre . $content . mktime(0, 0, 0, date('m', current_time('timestamp')), date('d', current_time('timestamp')), date('Y', current_time('timestamp'))));
+			$wpdb->query($wpdb->prepare("INSERT INTO {$wpdb->prefix}AndroidAppAmauri_push (`send_date`, `id_post`, `titre`, `message`, `sended`, `empreinte`) VALUES (%s, %s, %s, %s, %s, %s)", current_time('timestamp'), $id_post, $titre, $content, '1', $empreinte));
+			
+			$this->send($id_post, $titre, $content);
+		}
+		
+		public function cron() {
+			global $wpdb;
+			
+			$query = $wpdb->get_results($wpdb->prepare("SELECT `id`, `id_post`, `titre`, `message` FROM {$wpdb->prefix}AndroidAppAmauri_push WHERE `send_date` < %s AND sended = '0' ORDER BY `id` DESC", current_time('timestamp')));
+			foreach($query as $obj) {
+				$this->send($obj->id_post, stripslashes($obj->titre), stripslashes($obj->message));
+				$wpdb->query($wpdb->prepare("UPDATE {$wpdb->prefix}AndroidAppAmauri_push SET `sended` = %s WHERE `id` = %s", '1', $obj->id));
 			}
 		}
 		
