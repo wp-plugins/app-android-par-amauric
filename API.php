@@ -211,12 +211,14 @@ if(!class_exists('APIAndroidAppAmauri'))
 			}
 			
 			if ($catIsSticky) {
-				if ($offset == 0) { // page = 1
-					$sticky = wp_get_recent_posts(array('posts_per_page' => 1, 'post__in'  => $stickys, 'ignore_sticky_posts' => 1, 's' => $search, 'category' => $isCat,'post_type' => 'post', 'post_status' => 'publish','numberposts' => 1,'offset'=>$offset));
-					$normal = wp_get_recent_posts(array('s' => $search, 'category' => $isCat,'post_type' => 'post', 'post_status' => 'publish','numberposts' => 9,'offset'=>$offset));
+				
+				$firstSticky = wp_get_recent_posts(array('posts_per_page' => 1, 'post__in'  => $stickys, 'ignore_sticky_posts' => 1, 's' => $search, 'category' => $isCat,'post_type' => 'post', 'post_status' => 'publish','numberposts' => 1,'offset'=>0));
+				if ($offset == 0) {
+					$sticky = $firstSticky;
+					$normal = wp_get_recent_posts(array('post__not_in' => array( $firstSticky[0]['ID'] ), 's' => $search, 'category' => $isCat,'post_type' => 'post', 'post_status' => 'publish','numberposts' => 9,'offset'=>$offset));
 				} else {
 					$sticky = array();
-					$normal = wp_get_recent_posts(array('s' => $search, 'category' => $isCat,'post_type' => 'post', 'post_status' => 'publish','numberposts' => 10,'offset'=>$offset-1));
+					$normal = wp_get_recent_posts(array('post__not_in' => array( $firstSticky[0]['ID'] ), 's' => $search, 'category' => $isCat,'post_type' => 'post', 'post_status' => 'publish','numberposts' => 10,'offset'=>$offset-1));
 				}
 				
 				$data = array_merge($sticky, $normal);
