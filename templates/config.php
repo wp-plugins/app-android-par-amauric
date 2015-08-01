@@ -107,8 +107,8 @@
 	<h3>Un widget vous permet de faire un lien vers la fiche de l'app</h3>
     <table class="form-table">
 		<tr valign="top">
-			<th scope="row"><?php _e('Nom du package');?><br/><span>Communiqué par mail</span></th>
-			<td><input type="text" name="androidappamauri_package" value="<?php echo get_option('androidappamauri_package');?>" /></td>
+			<th scope="row"><?php _e('Nom du package');?></th>
+			<td><input type="text" name="androidappamauri_package" placeholder="lol.app.xxxxx" value="<?php echo get_option('androidappamauri_package');?>" /></td>
 		</tr>
     </table>
     </div>
