@@ -3,7 +3,7 @@
 Plugin Name: App Android (par Amauri)
 Plugin URI: https://android.ferank.fr/
 Description: Création de l'interface entre le blog et l'application.
-Version: 0.5.1
+Version: 0.5.2
 Author: Amauri CHAMPEAUX
 Author URI: http://amauri.champeaux.fr/a-propos
 */
@@ -60,7 +60,7 @@ if(!class_exists('AndroidAppAmauri'))
 		
 		public static function deactivate() {
 			global $wpdb;
-			$wpdb->query("DROP TABLE {$wpdb->prefix}AndroidAppAmauri_ids");
+			//$wpdb->query("DROP TABLE {$wpdb->prefix}AndroidAppAmauri_ids");
 			$wpdb->query("DROP TABLE {$wpdb->prefix}AndroidAppAmauri_push");
 			
 			// remove cron

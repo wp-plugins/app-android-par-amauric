@@ -45,10 +45,14 @@ if(!class_exists('PushAndroidAppAmauri'))
 			}
 		}
 		
-		public function sendToAndroid($id_post, $post)
-		{
+		public function sendToAndroid($id_post, $post) {
+			
+			// si edition 2mns apres creation
+			$start_date = new DateTime($post->post_date);
+			$since_start = $start_date->diff(new DateTime($post->post_modified));
+
 			// exit if already pushed
-			if (get_option('androidappamauri_push_' . $id_post, '0') == '1' OR get_option('androidappamauri_autopush', '1') == '0') {
+			if (get_option('androidappamauri_push_' . $id_post, '0') == '1' OR get_option('androidappamauri_autopush', '1') == '0' OR $since_start->i > 2) {
 				return;
 			}
 			

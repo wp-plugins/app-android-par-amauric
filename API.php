@@ -33,6 +33,7 @@ if(!class_exists('APIAndroidAppAmauri'))
 			
 			$content = $content_post->post_content;
 			$content = apply_filters('the_content', $content);
+			$content = apply_filters('appandroid_content', $content, array('id' => $id));
 			$content = str_replace(']]>', ']]&gt;', $content);
 			$content = html_entity_decode(str_replace(array("\r", "\n"),"", $content));
 			
