@@ -5,8 +5,14 @@ if(!class_exists('UtilsAndroidAppAmauri'))
     class UtilsAndroidAppAmauri {
 		
 		public function get_gravatar_url( $email ) {
-			$hash = md5( strtolower( trim ( $email ) ) );
-			return 'http://gravatar.com/avatar/' . $hash;
+			if ($email != '') {
+				$html = get_avatar($email, 200, get_option( 'avatar_default', 'mystery' ));
+				if ($html != FALSE) {
+					preg_match("/src='(.*?)'/i", $html, $matches);
+					return preg_replace('/&#038;/', '&', $matches[1]);
+				}
+			}
+			return '';
 		}
 
 		public function sanitize($content) {

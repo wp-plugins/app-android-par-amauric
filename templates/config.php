@@ -1,7 +1,7 @@
-<div class="wrap" style="float:left">
+<div class="wrap">
     <h1>Votre application Android</h1>
 	<h4>La mise à jour des apps peut durer jusqu'à 1 heure</h4>
-    <form method="post" action="options.php">
+    <form method="post" action="options.php" style="max-width:990px;">
 	<br/>
     <?php
     settings_fields( 'appAndroidAmauri' );
@@ -14,6 +14,7 @@
 	<a class="configApp_menupicker" href="javascript:void(0)" onclick="appconfig_lower();jQuery('#configApp_admob').toggle();"><span class="dashicons dashicons-megaphone"></span><br/>AdMob (publicités)</a>
 	<a class="configApp_menupicker" href="javascript:void(0)" onclick="appconfig_lower();jQuery('#configApp_play').toggle();"><span class="dashicons dashicons-cart"></span><br/>Fiche Play Store</a>
 	<a class="configApp_menupicker" href="javascript:void(0)" onclick="appconfig_lower();jQuery('#configApp_appindexing').toggle();"><span class="dashicons dashicons-admin-links"></span><br/>App Indexing (SEO)</a>
+	<a class="configApp_menupicker" href="javascript:void(0)" onclick="appconfig_lower();jQuery('#configApp_mentions').toggle();"><span class="dashicons dashicons-admin-users"></span><br/>Mentions légales</a>
 	
 	<div id="configApp_push" class="configApp">
     <h2>Notifications push</h2>
@@ -101,6 +102,21 @@
     </div>
 	</div>
 	
+	<div id="configApp_mentions" class="configApp">
+    <h2>Mentions légales</h2>
+    <div class="AndroidAppAmauri_div">
+	<h3>Entrez les mentions légales de votre blog. <a href="http://amauri.champeaux.fr/administration/droit-juridique/mentions-legales/" target="_blank">Coment les rédiger ?</a></h3>
+    <table class="form-table">
+		<tr valign="top">
+			<td><?php wp_editor( get_option('androidappamauri_mentions'), 'androidappamauri_mentions', array(
+				'media_buttons' => false,
+				'teeny' => true,
+			) ); ?></td>
+		</tr>
+    </table>
+    </div>
+	</div>
+	
 	<div id="configApp_play" class="configApp">
     <h2>Play Store</h2>
     <div class="AndroidAppAmauri_div">
@@ -119,6 +135,22 @@
     <div class="AndroidAppAmauri_div">
 	<h3>Personnalisation de l'interface de l'app</h3>
     <table class="form-table">
+		<tr valign="top">
+			<th scope="row" style="padding: 15px 0 0;color: gray;font-weight: 500;font-size: 12px;">Couleurs principales</th>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><?php _e('Thème');?></th>
+			<td class="mini_android_label">
+				<label><input name="androidappamauri_theme" type="radio" value="blue" <?php if (get_option('androidappamauri_theme') == 'blue'){echo 'checked';}?> /><div class="mini_android"><div class="mini_android_toolbar" style="background:#03A9F4"></div><div class="mini_android_bubble" style="background:#FF5252"></div></div></label>
+				<label><input name="androidappamauri_theme" type="radio" value="vert" <?php if (get_option('androidappamauri_theme') == 'vert'){echo 'checked';}?> /><div class="mini_android"><div class="mini_android_toolbar" style="background:#4CAF50"></div><div class="mini_android_bubble" style="background:#A62A54"></div></div></label>
+				<label><input name="androidappamauri_theme" type="radio" value="jaune" <?php if (get_option('androidappamauri_theme') == 'jaune'){echo 'checked';} ?> /><div class="mini_android"><div class="mini_android_toolbar" style="background:#D8C600"></div><div class="mini_android_bubble" style="background:#FF4081"></div></div></label>
+				<label><input name="androidappamauri_theme" type="radio" value="orange" <?php if (get_option('androidappamauri_theme') == 'orange'){echo 'checked';}?> /><div class="mini_android"><div class="mini_android_toolbar" style="background:#FF5722"></div><div class="mini_android_bubble" style="background:#8BC34A"></div></div></label>
+				<label><input name="androidappamauri_theme" type="radio" value="rouge" <?php if (get_option('androidappamauri_theme') == 'rouge'){echo 'checked';} ?> /><div class="mini_android"><div class="mini_android_toolbar" style="background:#F44336"></div><div class="mini_android_bubble" style="background:#8BC34A"></div></div></label>
+				<label><input name="androidappamauri_theme" type="radio" value="violet" <?php if (get_option('androidappamauri_theme') == 'violet'){echo 'checked';} ?> /><div class="mini_android"><div class="mini_android_toolbar" style="background:#9C27B0"></div><div class="mini_android_bubble" style="background:#D8C600"></div></div></label>
+				<label><input name="androidappamauri_theme" type="radio" value="gris" <?php if (get_option('androidappamauri_theme') == 'gris'){echo 'checked';}?> /><div class="mini_android"><div class="mini_android_toolbar" style="background:#607D8B"></div><div class="mini_android_bubble" style="background:#A66300"></div></div></label>
+			</td>
+		</tr>
+		
 		<tr valign="top">
 			<th scope="row" style="padding: 15px 0 0;color: gray;font-weight: 500;font-size: 12px;">Page des articles</th>
 		</tr>

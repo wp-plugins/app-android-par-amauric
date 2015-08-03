@@ -119,3 +119,26 @@ form.autopush {
 	font-size: 100px;
 	margin-bottom: 15px;
 }
+.mini_android {
+    width: 190px;
+    height: 240px;
+    background: #eee;
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 30px;
+}
+
+.mini_android_toolbar {
+    height: 35px;
+}
+
+.mini_android_bubble {
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
+    margin: 150px 0 0 135px;
+}
+
+.mini_android_label label {
+	display: block;
+}

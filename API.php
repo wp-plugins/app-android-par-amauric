@@ -16,6 +16,7 @@ if(!class_exists('APIAndroidAppAmauri'))
 			$output = '';
 			$cat = '';
 			$catID = '';
+			$nbcomment = '';
 			if($categories){
 				foreach($categories as $category) {
 					if ($output == '') {
@@ -68,9 +69,11 @@ if(!class_exists('APIAndroidAppAmauri'))
 	
 			$similaire = '';
 			$recent_posts = wp_get_recent_posts( $args, OBJECT );
-			foreach($recent_posts as $p) {
-				$title_similaire = preg_replace('#"#', '\"', html_entity_decode($p->post_title));
-				$similaire .= '{"postID":"' . $p->ID . '","titre":"' . $title_similaire . '", "image":"' .$UtilsAndroidAppAmauri->getImage($p->ID). '"},';
+			if (is_array($recent_posts)) {
+				foreach($recent_posts as $p) {
+					$title_similaire = preg_replace('#"#', '\"', html_entity_decode($p->post_title));
+					$similaire .= '{"postID":"' . $p->ID . '","titre":"' . $title_similaire . '", "image":"' .$UtilsAndroidAppAmauri->getImage($p->ID). '"},';
+				}
 			}
 			$similaire = trim($similaire, ',');
 			
@@ -79,7 +82,7 @@ if(!class_exists('APIAndroidAppAmauri'))
 			if (comments_open( $id )) {
 				$commentisopen = '1';
 				$nbcomment = get_comments_number($id);
-				$comments = get_comments('number=2&post_id=' . $id);
+				$comments = get_comments('status=approve&number=2&post_id=' . $id);
 				foreach($comments as $comment) {
 					if ($comment->comment_approved == 1) {
 						$commentaire .= '{"avatar":"'.$UtilsAndroidAppAmauri->get_gravatar_url($comment->comment_author_email).'","name":"' . strtoupper($comment->comment_author) . '","date": "Il y a '. human_time_diff( strtotime($comment->comment_date), current_time('timestamp') ) . '","content":"' . $UtilsAndroidAppAmauri->sanitize(wp_trim_words(wp_strip_all_tags($comment->comment_content), 40)) . '"},';
@@ -108,7 +111,7 @@ if(!class_exists('APIAndroidAppAmauri'))
 						$isChild = 'nope';
 						
 						$titre = strtoupper($comment->comment_author);
-						$texte = $UtilsAndroidAppAmauri->sanitize($comment->comment_content);
+						$texte = $UtilsAndroidAppAmauri->sanitize(nl2br($comment->comment_content));
 						
 						// is a child
 						if ($comment->comment_parent != 0) {
@@ -193,7 +196,7 @@ if(!class_exists('APIAndroidAppAmauri'))
 				$json .= '{"name":"'.trim($page->post_title).'","id":"'.$page->ID.'", "nb":"page"},';
 			}
 			
-			return '{"config":[{"similaire":"'.get_option('androidappamauri_similaire', '1').'","share":"'.get_option('androidappamauri_share', '1').'","commentaire":"'.get_option('androidappamauri_commentaire', '1').'","projectid":"'.get_option('androidappamauri_project').'","ga":"'.get_option('androidappamauri_ga').'","admob_float":"'.get_option('androidappamauri_admob_float').'","admob_splash":"'.get_option('androidappamauri_admob_splash').'","admob_t":"'.get_option('androidappamauri_admob_t').'","admob_b":"'.get_option('androidappamauri_admob_b').'"}],"data":['.trim($json, ',').']}';
+			return '{"config":[{"mentions":"'.$UtilsAndroidAppAmauri->sanitize(nl2br(get_option('androidappamauri_mentions', ''))).'","similaire":"'.get_option('androidappamauri_similaire', '1').'","share":"'.get_option('androidappamauri_share', '1').'","commentaire":"'.get_option('androidappamauri_commentaire', '1').'","projectid":"'.get_option('androidappamauri_project').'","ga":"'.get_option('androidappamauri_ga').'","admob_float":"'.get_option('androidappamauri_admob_float').'","admob_splash":"'.get_option('androidappamauri_admob_splash').'","admob_t":"'.get_option('androidappamauri_admob_t').'","admob_b":"'.get_option('androidappamauri_admob_b').'","theme":"'.get_option('androidappamauri_theme').'"}],"data":['.trim($json, ',').']}';
 		}
 		
 		public function recent($offset = 0, $isCat = 0, $isSearch = false) {
@@ -214,12 +217,25 @@ if(!class_exists('APIAndroidAppAmauri'))
 			if ($catIsSticky) {
 				
 				$firstSticky = wp_get_recent_posts(array('posts_per_page' => 1, 'post__in'  => $stickys, 'ignore_sticky_posts' => 1, 's' => $search, 'category' => $isCat,'post_type' => 'post', 'post_status' => 'publish','numberposts' => 1,'offset'=>0));
+				
+				$postExclude = '';
+				if (isset($firstSticky[0]['ID'])) {
+					$postExclude = $firstSticky[0]['ID'];
+				}
+				
 				if ($offset == 0) {
 					$sticky = $firstSticky;
-					$normal = wp_get_recent_posts(array('post__not_in' => array( $firstSticky[0]['ID'] ), 's' => $search, 'category' => $isCat,'post_type' => 'post', 'post_status' => 'publish','numberposts' => 9,'offset'=>$offset));
+					$numberPost = 9;
+					if ($postExclude == '') {
+						$numberPost = 10;
+					}
+					$normal = wp_get_recent_posts(array('post__not_in' => array( $postExclude ), 's' => $search, 'category' => $isCat,'post_type' => 'post', 'post_status' => 'publish','numberposts' => $numberPost,'offset'=>$offset));
 				} else {
 					$sticky = array();
-					$normal = wp_get_recent_posts(array('post__not_in' => array( $firstSticky[0]['ID'] ), 's' => $search, 'category' => $isCat,'post_type' => 'post', 'post_status' => 'publish','numberposts' => 10,'offset'=>$offset-1));
+					if ($postExclude != '') {
+						$offset--;
+					}
+					$normal = wp_get_recent_posts(array('post__not_in' => array( $postExclude ), 's' => $search, 'category' => $isCat,'post_type' => 'post', 'post_status' => 'publish','numberposts' => 10,'offset'=>$offset));
 				}
 				
 				$data = array_merge($sticky, $normal);
@@ -257,7 +273,7 @@ if(!class_exists('APIAndroidAppAmauri'))
 				
 				$titre = preg_replace('#"#', '\"', $d['post_title']);
 				
-				$json .= '{"sticky":"'.$hessticky.'", "cat":"'.$cat.'","titre":"'.$titre.'","texte":"'.$excerpt.'","image":"'.$image.'","id":"'.$d['ID'].'"},';
+				$json .= '{"sticky":"'.$hessticky.'","cat":"'.$cat.'","titre":"'.$titre.'","texte":"'.$excerpt.'","image":"'.$image.'","id":"'.$d['ID'].'"},';
 			}
 			return '{"data":['.trim($json, ',').']}';
 		}
