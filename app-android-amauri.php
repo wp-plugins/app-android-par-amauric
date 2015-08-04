@@ -3,7 +3,7 @@
 Plugin Name: App Android (par Amauri)
 Plugin URI: https://android.ferank.fr/
 Description: Création de l'interface entre le blog et l'application.
-Version: 0.5.5
+Version: 0.5.6
 Author: Amauri CHAMPEAUX
 Author URI: http://amauri.champeaux.fr/a-propos
 */
@@ -30,8 +30,8 @@ if(!class_exists('AndroidAppAmauri'))
 			global $wpdb;
 
 			$charset_collate = $wpdb->get_charset_collate();
-			$sql = '';
-			$sql .= "CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."AndroidAppAmauri_ids (
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			$sql = "CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."AndroidAppAmauri_ids (
 				`id` mediumint(9) NOT NULL AUTO_INCREMENT,
 				`registration_id` varchar(255) NOT NULL DEFAULT '',
 				`device_id` varchar(255) NOT NULL DEFAULT '',
@@ -39,7 +39,9 @@ if(!class_exists('AndroidAppAmauri'))
 				UNIQUE KEY `registration_id` (`registration_id`),
 				UNIQUE KEY `device_id` (`registration_id`)
 			) $charset_collate;";
-			$sql .= "CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."AndroidAppAmauri_push (
+			dbDelta( $sql );
+			
+			$sql2 = "CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."AndroidAppAmauri_push (
 				`id` mediumint(9) NOT NULL AUTO_INCREMENT,
 				`send_date` int(20) NOT NULL DEFAULT 0,
 				`sended` varchar(1) NOT NULL DEFAULT '0',
@@ -50,9 +52,7 @@ if(!class_exists('AndroidAppAmauri'))
 				UNIQUE KEY `id` (`id`),
 				UNIQUE KEY `empreinte` (`empreinte`)
 			) $charset_collate;";
-
-			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-			dbDelta( $sql );
+			dbDelta( $sql2 );
 			
 			// cron push
 			wp_schedule_event( time(), 'hourly', 'sendnotificationspush' );
