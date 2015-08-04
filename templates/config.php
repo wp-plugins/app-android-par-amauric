@@ -1,7 +1,7 @@
 <div class="wrap">
     <h1>Votre application Android</h1>
 	<h4>La mise à jour des apps peut durer jusqu'à 1 heure</h4>
-    <form method="post" action="options.php" style="max-width:990px;">
+    <form method="post" action="options.php" style="max-width:990px;" id="form_appandroid">
 	<br/>
     <?php
     settings_fields( 'appAndroidAmauri' );
@@ -203,6 +203,7 @@
 <div style="clear:both"></div>
 <script type="text/javascript">
 function appconfig_lower() {
+	jQuery('#form_appandroid').css('max-width', '100%');
 	jQuery('.configApp').css('display', 'none');
 	jQuery('.configApp_menupicker').css('width', '80px');
 	jQuery('.configApp_menupicker').css('margin-right', '10px');
