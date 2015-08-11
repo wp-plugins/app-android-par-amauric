@@ -41,7 +41,17 @@ if(!class_exists('PushAndroidAppAmauri'))
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
 				$result = curl_exec($ch);
+				$httpResponse = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 				curl_close($ch);
+				
+				// log
+				$wpdb->query($wpdb->prepare("INSERT INTO {$wpdb->prefix}AndroidAppAmauri_logs (`gmt`, `http`, `message`) VALUES (%s, %s, %s)", current_time('timestamp'), $httpResponse, $result));
+			} else {
+				if (get_option('androidappamauri_apipush', '') == '') {
+					$wpdb->query($wpdb->prepare("INSERT INTO {$wpdb->prefix}AndroidAppAmauri_logs (`gmt`, `http`, `message`) VALUES (%s, %s, %s)", current_time('timestamp'), '0', '{"data":"Clé API absente"}'));
+				} else {
+					$wpdb->query($wpdb->prepare("INSERT INTO {$wpdb->prefix}AndroidAppAmauri_logs (`gmt`, `http`, `message`) VALUES (%s, %s, %s)", current_time('timestamp'), '0', '{"data":"Aucun destinataire"}'));
+				}
 			}
 		}
 		

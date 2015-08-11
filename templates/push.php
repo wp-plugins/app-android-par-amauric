@@ -31,7 +31,7 @@ $PushAndroidAppAmauri->cron();
 	if (get_option('androidappamauri_apipush', '') == '') {
 		?>
 		<h1>Configuration requise</h1>
-		<a href="<?php echo admin_url('options-general.php?page=comment-by-tweet'); ?>">Vous devez saisir votre clée API.</a>
+		<a href="<?php echo admin_url('options-general.php?page=app-android-amauri'); ?>">Vous devez saisir votre clée API.</a>
 		<?php
 	} else {
 		// formulaire creation de notif
@@ -97,7 +97,25 @@ $PushAndroidAppAmauri->cron();
 		</form>';
 		
 		// afficher/masquer supprime
-		echo '<br/><br/><a href="javascript:void(0)" onclick="jQuery(\'.pushpreview_deleted\').toggle();">Afficher/Masquer les notifications supprimées</a><br/><br/>';
+		echo '<br/><br/><a href="javascript:void(0)" onclick="jQuery(\'.pushpreview_since\').toggle();jQuery(\'.pushpreview\').toggle();jQuery(\'.pushlogs\').toggle();"><b>Afficher/Masquer les logs</b></a> | <a href="javascript:void(0)" onclick="jQuery(\'.pushpreview_deleted\').toggle();">Afficher/Masquer les notifications supprimées</a><br/><br/>';
+		
+		// logs
+		echo '<div class="pushlogs" style="display:none;max-height:400px;overflow:auto;">';
+		$query = $wpdb->get_results("SELECT `gmt`, `http`, `message` FROM {$wpdb->prefix}AndroidAppAmauri_logs ORDER BY `gmt` DESC");
+		foreach($query as $obj) {
+			if ($obj->http == 200) {
+				$colorFont = 'darkgreen';
+			} else if ($obj->http < 400) {
+				$colorFont = 'darkorange';
+			} else {
+				$colorFont = 'darkred';
+			}
+			
+			echo '<div style="display:inline-block;background:' . $colorFont . ';padding:8px;color:#fff;text-align:center;width:150px;">' . $obj->http . '</div>
+			<div style="display:inline-block;padding:8px;font-family:courier;white-space: pre;vertical-align: top;background: #333;color: #fff;width: 70%;"><b><span style="color:#0FB70B;font-size:14px;">@ ' . date('d/m/Y H:i:s', $obj->gmt) . '</span></b><br/>' . print_r(json_decode($obj->message), true) . '</div>
+			<div class="clear"></div>';
+		}
+		echo '</div>';
 		
 		// historique
 		$query = $wpdb->get_results("SELECT `id`, `id_post`, `titre`, `message`, `send_date`, `sended` FROM {$wpdb->prefix}AndroidAppAmauri_push ORDER BY `send_date` DESC");

@@ -65,6 +65,7 @@ if(!class_exists('AdminAndroidAppAmauri'))
          * Settings page.
          */
         function config_page() {
+			global $wpdb;
 			include(sprintf("%s/templates/config.php", dirname(__FILE__)));    
         }
 

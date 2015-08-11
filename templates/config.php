@@ -1,3 +1,28 @@
+<?php
+if (isset($_POST['razAndroidApp'])) {
+	wp_clear_scheduled_hook( 'sendnotificationspush' );
+	$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}AndroidAppAmauri_push");
+	$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}AndroidAppAmauri_ids");
+	$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}AndroidAppAmauri_logs");
+	delete_option('androidappamauri_autopush' );
+	delete_option('androidappamauri_apipush' );
+	delete_option('androidappamauri_project' ); // project id push
+	delete_option('androidappamauri_ga' ); // google analytics
+	delete_option('androidappamauri_admob_t' ); // admob top
+	delete_option('androidappamauri_admob_b' ); // admob bottom
+	delete_option('androidappamauri_admob_splash' ); // admob splash
+	delete_option('androidappamauri_admob_float' ); // admob float
+	delete_option('androidappamauri_share' );
+	delete_option('androidappamauri_similaire' );
+	delete_option('androidappamauri_commentaire' );
+	delete_option('androidappamauri_package' );
+	delete_option('androidappamauri_exclude' );
+	delete_option('androidappamauri_mentions' );
+	delete_option('androidappamauri_theme' );
+	$AndroidAppAmauri = new AndroidAppAmauri();
+	$AndroidAppAmauri->activate();
+}
+?>
 <div class="wrap">
     <h1>Votre application Android</h1>
 	<h4>La mise à jour des apps peut durer jusqu'à 1 heure</h4>
@@ -32,7 +57,7 @@
 
 		<tr valign="top">
 			<th scope="row"><?php _e('Numéro du projet');?><br/></th>
-			<td><input type="text" name="androidappamauri_project" value="<?php echo get_option('androidappamauri_project');?>" /></td>
+			<td><input placeholder="00000000000" type="text" name="androidappamauri_project" value="<?php echo get_option('androidappamauri_project');?>" /></td>
 		</tr>
 		
 		<tr valign="top">
@@ -141,7 +166,7 @@
 		<tr valign="top">
 			<th scope="row"><?php _e('Thème');?></th>
 			<td class="mini_android_label">
-				<label><input name="androidappamauri_theme" type="radio" value="blue" <?php if (get_option('androidappamauri_theme') == 'blue'){echo 'checked';}?> /><div class="mini_android"><div class="mini_android_toolbar" style="background:#03A9F4"></div><div class="mini_android_bubble" style="background:#FF5252"></div></div></label>
+				<label><input name="androidappamauri_theme" type="radio" value="blue" <?php if (get_option('androidappamauri_theme') == '' || get_option('androidappamauri_theme') == 'blue'){echo 'checked';}?> /><div class="mini_android"><div class="mini_android_toolbar" style="background:#03A9F4"></div><div class="mini_android_bubble" style="background:#FF5252"></div></div></label>
 				<label><input name="androidappamauri_theme" type="radio" value="vert" <?php if (get_option('androidappamauri_theme') == 'vert'){echo 'checked';}?> /><div class="mini_android"><div class="mini_android_toolbar" style="background:#4CAF50"></div><div class="mini_android_bubble" style="background:#A62A54"></div></div></label>
 				<label><input name="androidappamauri_theme" type="radio" value="jaune" <?php if (get_option('androidappamauri_theme') == 'jaune'){echo 'checked';} ?> /><div class="mini_android"><div class="mini_android_toolbar" style="background:#D8C600"></div><div class="mini_android_bubble" style="background:#FF4081"></div></div></label>
 				<label><input name="androidappamauri_theme" type="radio" value="orange" <?php if (get_option('androidappamauri_theme') == 'orange'){echo 'checked';}?> /><div class="mini_android"><div class="mini_android_toolbar" style="background:#FF5722"></div><div class="mini_android_bubble" style="background:#8BC34A"></div></div></label>
@@ -199,6 +224,10 @@
 	
     <?php submit_button(); ?>
     </form>
+	
+	<br/><br/><a href="#" onclick="if(confirm('Dernière confirmation avant REMISE A ZERO :\n\n- Suppression de TOUS les paramètres\n- Suppression de TOUS les appareils associés aux notifications')){document.getElementById('razAndroidApp').submit();}return false"style="color:darkred;font-size:11px;">RàZ</a>
+	
+	<form action="" method="post" id="razAndroidApp"><input type="hidden" name="razAndroidApp" value="1" /></form>
 </div>
 <div style="clear:both"></div>
 <script type="text/javascript">

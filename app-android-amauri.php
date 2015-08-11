@@ -3,7 +3,7 @@
 Plugin Name: App Android (par Amauri)
 Plugin URI: https://android.ferank.fr/
 Description: Création de l'interface entre le blog et l'application.
-Version: 0.5.6
+Version: 0.5.7
 Author: Amauri CHAMPEAUX
 Author URI: http://amauri.champeaux.fr/a-propos
 */
@@ -54,14 +54,23 @@ if(!class_exists('AndroidAppAmauri'))
 			) $charset_collate;";
 			dbDelta( $sql2 );
 			
+			$sql3 = "CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."AndroidAppAmauri_logs (
+				`id` mediumint(9) NOT NULL AUTO_INCREMENT,
+				`gmt` int(20) NOT NULL DEFAULT 0,
+				`http` varchar(3) NOT NULL DEFAULT '',
+				`message` varchar(255) NOT NULL DEFAULT '',
+				UNIQUE KEY `id` (`id`)
+			) $charset_collate;";
+			dbDelta( $sql3 );
+			
 			// cron push
 			wp_schedule_event( time(), 'hourly', 'sendnotificationspush' );
 		}
 		
 		public static function deactivate() {
 			global $wpdb;
-			//$wpdb->query("DROP TABLE {$wpdb->prefix}AndroidAppAmauri_ids");
-			$wpdb->query("DROP TABLE {$wpdb->prefix}AndroidAppAmauri_push");
+			$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}AndroidAppAmauri_push");
+			$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}AndroidAppAmauri_logs");
 			
 			// remove cron
 			wp_clear_scheduled_hook( 'sendnotificationspush' );
