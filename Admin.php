@@ -57,6 +57,7 @@ if(!class_exists('AdminAndroidAppAmauri'))
             register_setting( 'appAndroidAmauri', 'androidappamauri_commentaire' );
             register_setting( 'appAndroidAmauri', 'androidappamauri_package' );
             register_setting( 'appAndroidAmauri', 'androidappamauri_exclude' );
+            register_setting( 'appAndroidAmauri', 'androidappamauri_excluded' );
             register_setting( 'appAndroidAmauri', 'androidappamauri_mentions' );
             register_setting( 'appAndroidAmauri', 'androidappamauri_theme' );
         }

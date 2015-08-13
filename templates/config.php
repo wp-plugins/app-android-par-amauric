@@ -19,6 +19,7 @@ if (isset($_POST['razAndroidApp'])) {
 	delete_option('androidappamauri_exclude' );
 	delete_option('androidappamauri_mentions' );
 	delete_option('androidappamauri_theme' );
+	delete_option('androidappamauri_excluded' );
 	$AndroidAppAmauri = new AndroidAppAmauri();
 	$AndroidAppAmauri->activate();
 }
@@ -40,6 +41,7 @@ if (isset($_POST['razAndroidApp'])) {
 	<a class="configApp_menupicker" href="javascript:void(0)" onclick="appconfig_lower();jQuery('#configApp_play').toggle();"><span class="dashicons dashicons-cart"></span><br/>Fiche Play Store</a>
 	<a class="configApp_menupicker" href="javascript:void(0)" onclick="appconfig_lower();jQuery('#configApp_appindexing').toggle();"><span class="dashicons dashicons-admin-links"></span><br/>App Indexing (SEO)</a>
 	<a class="configApp_menupicker" href="javascript:void(0)" onclick="appconfig_lower();jQuery('#configApp_mentions').toggle();"><span class="dashicons dashicons-admin-users"></span><br/>Mentions légales</a>
+	<a class="configApp_menupicker" href="javascript:void(0)" onclick="appconfig_lower();jQuery('#configApp_pegi').toggle();"><span class="dashicons dashicons-dismiss"></span><br/>Articles à exclure (nsfw)</a>
 	
 	<div id="configApp_push" class="configApp">
     <h2>Notifications push</h2>
@@ -214,6 +216,36 @@ if (isset($_POST['razAndroidApp'])) {
 						}
 					}
 					echo ' /> ' . trim($page->post_title) . '</label><br/>';
+				}
+				?>
+			</td>
+		</tr>
+    </table>
+    </div>
+	</div>
+	
+	
+	<div id="configApp_pegi" class="configApp">
+    <h2>Articles sensibles à exclure de l'App</h2>
+    <div class="AndroidAppAmauri_div">
+	<h3>Créez des tags (nsfw, adulte, violence) par exemple et assignez le à vos articles sensibles avant de les exclure ici.</h3>
+    <table class="form-table">
+		<tr valign="top">
+			<th scope="row"><?php _e('Tags à exclure');?></th>
+			<td>
+				<?php
+				$excluded = get_option('androidappamauri_excluded');
+				$tags = get_tags();
+				
+				foreach ( $tags as $tag ) {
+					echo '<label><input type="checkbox" name="androidappamauri_excluded[]" value="' . $tag->term_id . '" ';
+					if (is_array($excluded))
+					{
+						if (in_array($tag->term_id, $excluded)) {
+							echo 'checked';
+						}
+					}
+					echo ' /> ' . trim($tag->name) . '</label><br/>';
 				}
 				?>
 			</td>
